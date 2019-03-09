@@ -2,6 +2,9 @@ package br.ufc.comp.qalc.frontend;
 
 import br.ufc.comp.qalc.frontend.token.EOFToken;
 import br.ufc.comp.qalc.frontend.token.NumberToken;
+import br.ufc.comp.qalc.frontend.token.VariableIdentifierToken;
+import br.ufc.comp.qalc.frontend.token.ResultIdentifierToken;
+import br.ufc.comp.qalc.frontend.token.FunctionIdentifierToken;
 import br.ufc.comp.qalc.frontend.token.Token;
 
 import java.io.IOException;
@@ -62,6 +65,43 @@ public class Scanner {
             String stringValue = lexema.toString();
 
             return new NumberToken(currentLine, lexemeStart, stringValue);
+        }else if (source.getCurrentChar() == '$') { // VariableIdentifierToken e ResultIdentifierToken
+            StringBuilder lexema = new StringBuilder();
+
+            long currentLine = source.getCurrentLine();
+            long lexemeStart = source.getCurrentColumn();
+
+            boolean variable = true;
+
+            do {
+                if(Character.isDigit(source.getCurrentChar())){
+                    variable = false;
+                }
+                lexema.append(source.getCurrentChar());
+                source.advance();
+            } while (source.getCurrentChar() != ' ' & source.getCurrentChar() != '\n');
+
+            String stringValue = lexema.toString();
+
+            if(variable){
+                return new VariableIdentifierToken(currentLine, lexemeStart, stringValue);
+            }
+
+            return new ResultIdentifierToken(currentLine, lexemeStart, stringValue);
+        }else if(source.getCurrentChar() == '@'){ //FunctionIdentifierToken
+            StringBuilder lexema = new StringBuilder();
+
+            long currentLine = source.getCurrentLine();
+            long lexemeStart = source.getCurrentColumn();
+
+            do {
+                lexema.append(source.getCurrentChar());
+                source.advance();
+            } while (source.getCurrentChar() != ' ' & source.getCurrentChar() != '\n');
+
+            String stringValue = lexema.toString();
+
+            return new FunctionIdentifierToken(currentLine, lexemeStart, stringValue);
         }
 
         // TODO Recuperação de erros.
