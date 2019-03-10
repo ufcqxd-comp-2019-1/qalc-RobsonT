@@ -1,11 +1,6 @@
 package br.ufc.comp.qalc.frontend;
 
-import br.ufc.comp.qalc.frontend.token.EOFToken;
-import br.ufc.comp.qalc.frontend.token.NumberToken;
-import br.ufc.comp.qalc.frontend.token.VariableIdentifierToken;
-import br.ufc.comp.qalc.frontend.token.ResultIdentifierToken;
-import br.ufc.comp.qalc.frontend.token.FunctionIdentifierToken;
-import br.ufc.comp.qalc.frontend.token.Token;
+import br.ufc.comp.qalc.frontend.token.*;
 
 import java.io.IOException;
 
@@ -102,6 +97,38 @@ public class Scanner {
             String stringValue = lexema.toString();
 
             return new FunctionIdentifierToken(currentLine, lexemeStart, stringValue);
+        }else if(source.getCurrentChar() == '=' || source.getCurrentChar() == '+' || source.getCurrentChar() == '-' || source.getCurrentChar() == '*' || source.getCurrentChar() == '/' || source.getCurrentChar() == '%' ||source.getCurrentChar() == '^'){ //OperationIdentifierToken
+            StringBuilder lexema = new StringBuilder();
+
+            long currentLine = source.getCurrentLine();
+            long lexemeStart = source.getCurrentColumn();
+            lexema.append(source.getCurrentChar());
+            source.advance();
+            String stringValue = lexema.toString();
+            switch (stringValue.charAt(0)) {
+                case '=':
+                    return new AttributionToken(currentLine, lexemeStart, stringValue);
+                case '+':
+                    return new PlusToken(currentLine, lexemeStart, stringValue);
+                case '-':
+                    return new MinusToken(currentLine, lexemeStart, stringValue);
+                case '*':
+                    return new TimesToken(currentLine, lexemeStart, stringValue);
+                case '/':
+                    return new DivisionToken(currentLine, lexemeStart, stringValue);
+                case '%':
+                    return new ModToken(currentLine, lexemeStart, stringValue);
+                case '^':
+                    return new PowToken(currentLine, lexemeStart, stringValue);
+            }
+        }else if(source.getCurrentChar() == ')' || source.getCurrentChar() == '('){ //DelimiterToken
+            StringBuilder lexema = new StringBuilder();
+            long currentLine = source.getCurrentLine();
+            long lexemeStart = source.getCurrentColumn();
+            lexema.append(source.getCurrentChar());
+            source.advance();
+            String stringValue = lexema.toString();
+            return new DelimiterToken(currentLine, lexemeStart, stringValue);
         }
 
         // TODO Recuperação de erros.
