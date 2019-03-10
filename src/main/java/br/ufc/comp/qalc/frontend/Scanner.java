@@ -79,7 +79,7 @@ public class Scanner {
                 }
                 lexema.append(source.getCurrentChar());
                 source.advance();
-            } while (source.getCurrentChar() != ' ' & source.getCurrentChar() != '\n');
+            } while (Character.isLetterOrDigit(source.getCurrentChar()));
 
             String stringValue = lexema.toString();
 
@@ -97,7 +97,7 @@ public class Scanner {
             do {
                 lexema.append(source.getCurrentChar());
                 source.advance();
-            } while (source.getCurrentChar() != ' ' & source.getCurrentChar() != '\n');
+            } while (Character.isLetterOrDigit(source.getCurrentChar()));
 
             String stringValue = lexema.toString();
 
