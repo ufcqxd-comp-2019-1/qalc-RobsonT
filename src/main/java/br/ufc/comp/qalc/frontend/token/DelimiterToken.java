@@ -1,9 +1,9 @@
 package br.ufc.comp.qalc.frontend.token;
 
 /**
- * Classe que representa um token do tipo (ATTRIB).
+ * Classe que representa um token do tipo (LPAREN) e (RPAREN).
  */
-public class AttributionToken extends Token{
+public class DelimiterToken extends Token{
     /**
      * Valor que o lexema deste token representa.
      * <p>
@@ -13,12 +13,13 @@ public class AttributionToken extends Token{
      */
 
     protected char charValue;
-    public AttributionToken(long line, long start, String value) throws IllegalArgumentException {
+
+    public DelimiterToken(long line, long start, String value) throws IllegalArgumentException {
         super(line, start, value);
     }
 
     /**
-     * Para este tipo de token, converte o lexema em um operador do tipo {@code char},
+     * Para este tipo de token, converte o lexema em um delimitador do tipo {@code char},
      * caso não tenha feito ainda.
      *
      * @see Token#interpretAttributes()
@@ -35,7 +36,7 @@ public class AttributionToken extends Token{
      *
      * @return Valor do lexema.
      */
-    public char getAttibutionToken() {
+    public char getDelimiterToken() {
         interpretAttributes();
 
         return charValue;
@@ -43,6 +44,9 @@ public class AttributionToken extends Token{
 
     @Override
     public String getTokenIdentifier() {
-        return "ATTRIB";
+        if (charValue == '(' ) {
+            return "LPAREN";
+        }
+        return "RPAREN";
     }
 }

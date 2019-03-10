@@ -12,32 +12,33 @@ public class DivisionToken extends Token{
      * @see #interpretAttributes()
      */
 
+    protected char charValue;
     public DivisionToken(long line, long start, String value) throws IllegalArgumentException {
         super(line, start, value);
     }
 
     /**
-     * Para este tipo de token, converte o lexema em um operador do tipo {@code String},
+     * Para este tipo de token, converte o lexema em um operador do tipo {@code char},
      * caso não tenha feito ainda.
      *
      * @see Token#interpretAttributes()
      */
     @Override
     public void interpretAttributes() {
-        if (stringValue != null){
-            stringValue = "/";
+        if(stringValue != null){
+            charValue = stringValue.charAt(0);
         }
     }
 
     /**
-     * Obtém a representação do lexema deste token interpretada como uma String.
+     * Obtém a representação do lexema deste token interpretada como um char.
      *
-     * @return Valor numérico do lexema.
+     * @return Valor do lexema.
      */
-    public String getNumericValue() {
+    public char getDivisionToken() {
         interpretAttributes();
 
-        return stringValue;
+        return charValue;
     }
 
     @Override
