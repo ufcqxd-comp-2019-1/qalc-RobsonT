@@ -115,9 +115,17 @@ public class QALC {
                         );
                         break;
                     case PARSER:
+                        MessageCenter.registerConsumerFor(
+                                MessageCategory.PARSING,
+                                new TokensReporter(outputToStream, qalc.outputVerbosity)
+                        );
                         // TODO
                         break;
                     case SEMANTIC:
+                        MessageCenter.registerConsumerFor(
+                                MessageCategory.SEMANTICS,
+                                new TokensReporter(outputToStream, qalc.outputVerbosity)
+                        );
                         // TODO
                         break;
                     case RUNNER:
