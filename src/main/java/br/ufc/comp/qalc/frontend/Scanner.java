@@ -129,6 +129,22 @@ public class Scanner {
             source.advance();
             String stringValue = lexema.toString();
             return new DelimiterToken(currentLine, lexemeStart, stringValue);
+        }else if(source.getCurrentChar() == ','){ //ComaToken
+            StringBuilder lexema = new StringBuilder();
+            long currentLine = source.getCurrentLine();
+            long lexemeStart = source.getCurrentColumn();
+            lexema.append(source.getCurrentChar());
+            source.advance();
+            String stringValue = lexema.toString();
+            return new ComaToken(currentLine, lexemeStart, stringValue);
+        }else if(source.getCurrentChar() == ';'){ //SemiToken
+            StringBuilder lexema = new StringBuilder();
+            long currentLine = source.getCurrentLine();
+            long lexemeStart = source.getCurrentColumn();
+            lexema.append(source.getCurrentChar());
+            source.advance();
+            String stringValue = lexema.toString();
+            return new SemiToken(currentLine, lexemeStart, stringValue);
         }
 
         // TODO Recuperação de erros.
