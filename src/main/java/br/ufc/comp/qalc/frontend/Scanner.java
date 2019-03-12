@@ -197,8 +197,7 @@ public class Scanner {
                         simbol = (simbols[i] == source.getCurrentChar());
                     }
                 }
-                System.out.println(source.getCurrentChar());
-            } while (simbol == false || !(Character.isDigit(source.getCurrentChar())));
+            } while (simbol == false && !(Character.isDigit(source.getCurrentChar())) && source.getCurrentChar() != '\n');
 
             String stringValue = lexema.toString();
 
