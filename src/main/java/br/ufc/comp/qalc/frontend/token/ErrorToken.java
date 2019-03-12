@@ -26,6 +26,6 @@ public class ErrorToken extends Token{
 
     @Override
     public String getTokenIdentifier() {
-        return "Erro: linha " + getLineNumber() + ", Coluna " + getColumnStart() + "-" + getColumnEnd() + "; Nao identificado:" + getErrorToken();
+        return "Erro: linha " + getLineNumber() + ", Coluna " + getColumnStart() + "-" + getColumnEnd() + "; Descricao:" + getErrorToken();
     }
 }
