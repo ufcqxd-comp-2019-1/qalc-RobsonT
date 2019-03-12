@@ -44,6 +44,7 @@ public class DelimiterToken extends Token{
 
     @Override
     public String getTokenIdentifier() {
+        interpretAttributes();
         if (charValue == '(' ) {
             return "LPAREN";
         }
