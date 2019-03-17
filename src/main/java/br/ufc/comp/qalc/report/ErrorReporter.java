@@ -3,7 +3,9 @@ package br.ufc.comp.qalc.report;
 import br.ufc.comp.qalc.OutputVerbosity;
 import br.ufc.comp.qalc.report.messages.Message;
 import br.ufc.comp.qalc.report.messages.MessageCategory;
+import br.ufc.comp.qalc.report.messages.NewTokenMessage;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -28,6 +30,18 @@ public class ErrorReporter extends BasicReporter {
 
     @Override
     public void consume(Message message) {
-        // TODO
+        if (message instanceof NewTokenMessage) {
+            try {
+                output.write(String.format("%s, %s, L: %d, C: %d-%d)\n",
+                        ((NewTokenMessage) message).getToken().getTokenIdentifier(),
+                        ((NewTokenMessage) message).getToken().toString(),
+                        ((NewTokenMessage) message).getToken().getLineNumber(),
+                        ((NewTokenMessage) message).getToken().getColumnStart(),
+                        ((NewTokenMessage) message).getToken().getColumnEnd()));
+
+            } catch (IOException e) {
+                reportFailure(e);
+            }
+        }
     }
 }

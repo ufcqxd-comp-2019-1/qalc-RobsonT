@@ -1,9 +1,9 @@
 package br.ufc.comp.qalc.frontend.token;
 
 /**
- * Classe que representa um token do tipo (COMA).
+ * Classe que representa um token do tipo (ATRIB).
  */
-public class ComaToken extends Token{
+public class AtributionToken extends Token{
     /**
      * Valor que o lexema deste token representa.
      * <p>
@@ -13,13 +13,12 @@ public class ComaToken extends Token{
      */
 
     protected char charValue;
-
-    public ComaToken(long line, long start, String value) throws IllegalArgumentException {
+    public AtributionToken(long line, long start, String value) throws IllegalArgumentException {
         super(line, start, value);
     }
 
     /**
-     * Para este tipo de token, converte o lexema em um simbolo especial do tipo {@code char},
+     * Para este tipo de token, converte o lexema em um operador do tipo {@code char},
      * caso não tenha feito ainda.
      *
      * @see Token#interpretAttributes()
@@ -36,7 +35,7 @@ public class ComaToken extends Token{
      *
      * @return Valor do lexema.
      */
-    public char getDelimiterToken() {
+    public char getAttibutionToken() {
         interpretAttributes();
 
         return charValue;
@@ -44,6 +43,6 @@ public class ComaToken extends Token{
 
     @Override
     public String getTokenIdentifier() {
-        return "COMA";
+        return "ATRIB";
     }
 }

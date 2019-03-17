@@ -42,16 +42,6 @@ public class Scanner {
      * @throws IOException Caso haja problema na leitura da fonte.
      */
     public Token getNextToken() throws IOException {
-        while(Character.isWhitespace(source.getCurrentChar()) || source.getCurrentChar() == '\n'){
-            source.advance();
-        }
-        if(source.getCurrentChar() == '#'){
-            do{
-                source.advance();
-            }while(source.getCurrentChar() != '\n');
-            source.advance();
-
-        }
 
         if (source.getCurrentChar() == Source.EOF) {
             return new EOFToken(source.getCurrentLine(), source.getCurrentColumn());
@@ -82,6 +72,9 @@ public class Scanner {
             long currentLine = source.getCurrentLine();
             long lexemeStart = source.getCurrentColumn();
 
+            lexema.append(source.getCurrentChar());
+            source.advance();
+
             if(source.getCurrentChar() == '?'){
                 lexema.append(source.getCurrentChar());
                 source.advance();
@@ -90,31 +83,33 @@ public class Scanner {
                 return new ResultIdentifierToken(currentLine, lexemeStart, stringValue);
             }
 
-            boolean variable = true;
             boolean zero = true;
 
-            do {
-
-                if(Character.isDigit(source.getCurrentChar())){
-                    variable = false;
-                }
+            while (Character.isLetter(source.getCurrentChar())){
 
                 lexema.append(source.getCurrentChar());
 
+                source.advance();
+            }
+            String stringValue = lexema.toString();
+            if(stringValue.length() > 1){
+                return new VariableIdentifierToken(currentLine, lexemeStart, stringValue);
+            }
+
+            while (Character.isDigit(source.getCurrentChar())){
                 if(source.getCurrentChar() != '0'){
                     zero = false;
                 }
 
+                lexema.append(source.getCurrentChar());
+
                 source.advance();
-            } while (Character.isLetterOrDigit(source.getCurrentChar()));
-
-            String stringValue = lexema.toString();
-
-            if(variable){
-                return new VariableIdentifierToken(currentLine, lexemeStart, stringValue);
             }
 
-            if(zero){
+            stringValue = lexema.toString();
+
+            if(zero || stringValue.length() == 1){
+                System.out.println(stringValue);
                 return new ErrorToken(currentLine, lexemeStart, stringValue);
             }
 
@@ -133,7 +128,7 @@ public class Scanner {
             String stringValue = lexema.toString();
 
             return new FunctionIdentifierToken(currentLine, lexemeStart, stringValue);
-        }else if(source.getCurrentChar() == '=' || source.getCurrentChar() == '+' || source.getCurrentChar() == '-' || source.getCurrentChar() == '*' || source.getCurrentChar() == '/' || source.getCurrentChar() == '%' ||source.getCurrentChar() == '^'){ //OperationIdentifierToken
+        }else if(source.getCurrentChar() == '=' || source.getCurrentChar() == '+' || source.getCurrentChar() == '-' || source.getCurrentChar() == '*' || source.getCurrentChar() == '/' || source.getCurrentChar() == '%' || source.getCurrentChar() == '^'){ //OperationIdentifierToken
             StringBuilder lexema = new StringBuilder();
 
             long currentLine = source.getCurrentLine();
@@ -143,7 +138,7 @@ public class Scanner {
             String stringValue = lexema.toString();
             switch (stringValue.charAt(0)) {
                 case '=':
-                    return new AttributionToken(currentLine, lexemeStart, stringValue);
+                    return new AtributionToken(currentLine, lexemeStart, stringValue);
                 case '+':
                     return new PlusToken(currentLine, lexemeStart, stringValue);
                 case '-':
@@ -172,7 +167,7 @@ public class Scanner {
             lexema.append(source.getCurrentChar());
             source.advance();
             String stringValue = lexema.toString();
-            return new ComaToken(currentLine, lexemeStart, stringValue);
+            return new CommaToken(currentLine, lexemeStart, stringValue);
         }else if(source.getCurrentChar() == ';'){ //SemiToken
             StringBuilder lexema = new StringBuilder();
             long currentLine = source.getCurrentLine();
@@ -181,15 +176,46 @@ public class Scanner {
             source.advance();
             String stringValue = lexema.toString();
             return new SemiToken(currentLine, lexemeStart, stringValue);
+        }else if(Character.isWhitespace(source.getCurrentChar())){
+            StringBuilder lexema = new StringBuilder();
+
+            long currentLine = source.getCurrentLine();
+            long lexemeStart = source.getCurrentColumn();
+
+            while(Character.isWhitespace(source.getCurrentChar()) ){
+                lexema.append(source.getCurrentChar());
+                source.advance();
+            }
+
+            String stringValue = lexema.toString();
+
+            return new WhiteToken(currentLine, lexemeStart, stringValue);
+        }else if(source.getCurrentChar() == '#'){
+            StringBuilder lexema = new StringBuilder();
+
+            long currentLine = source.getCurrentLine();
+            long lexemeStart = source.getCurrentColumn();
+
+            while(source.getCurrentChar() != '\n'){
+                lexema.append(source.getCurrentChar());
+                source.advance();
+            }
+
+            lexema.append(source.getCurrentChar());
+            source.advance();
+
+            String stringValue = lexema.toString();
+
+            return new ComToken(currentLine, lexemeStart, stringValue);
         }else{
-            char[] simbols = {'=','+','-','/','$','#',',',';','*','@','(',')'};
+            char[] simbols = {'=','+','-','/','$','#',',',';','*','@','(',')','^','%'};
             boolean simbol = false;
             StringBuilder lexema = new StringBuilder();
 
             long currentLine = source.getCurrentLine();
             long lexemeStart = source.getCurrentColumn();
 
-            do {
+            while (simbol == false && !(Character.isDigit(source.getCurrentChar())) && source.getCurrentChar() != '\n'){
                 lexema.append(source.getCurrentChar());
                 source.advance();
                 for (int i = 0;i< simbols.length;i++){
@@ -197,14 +223,12 @@ public class Scanner {
                         simbol = (simbols[i] == source.getCurrentChar());
                     }
                 }
-            } while (simbol == false && !(Character.isDigit(source.getCurrentChar())) && source.getCurrentChar() != '\n');
+            }
 
             String stringValue = lexema.toString();
 
             return new ErrorToken(currentLine, lexemeStart, stringValue);
         }
-
-        // TODO Recuperação de erros.
 
         return null;
     }
